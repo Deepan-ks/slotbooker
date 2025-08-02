@@ -28,18 +28,27 @@ public class BookingController {
 
     private final BookingService bookingService;
 
+    /**
+     * Create a new booking
+     */
     @PostMapping
     public ResponseEntity<BookingResponse> bookSlot(@Valid @RequestBody BookingCreateRequest request) {
         BookingResponse response = bookingService.bookSlot(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /**
+     * Get all bookings for player
+     */
     @GetMapping
     public ResponseEntity<List<BookingResponse>> getBookingsForCurrentUser(@RequestParam Long playerId){
         List<BookingResponse> responses = bookingService.getBookingsForPlayerId(playerId);
         return ResponseEntity.ok(responses);
     }
 
+    /**
+     * Delete a booking
+     */
     @DeleteMapping("/{bookingId}")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long bookingId){
         Boolean isDeleted = bookingService.deleteBookingForId(bookingId);

@@ -17,18 +17,32 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Get all users
+     * @return
+     */
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers(){
         List<UserResponse> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
 
+    /**
+     * Register a new user
+     * @param registerRequest
+     * @return
+     */
     @PostMapping("/register")
     public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegisterRequest registerRequest){
         UserResponse response = userService.userRegisterService(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    /**
+     * Get user by id
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id){
         UserResponse user = userService.findUserById(id);

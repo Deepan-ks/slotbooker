@@ -7,21 +7,24 @@ import com.deepan.slotbooker.mapper.UserMapper;
 import com.deepan.slotbooker.model.User;
 import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserResponse userRegisterService(UserRegisterRequest userRegisterRequest) {
         User user = UserMapper.createUserEntity(userRegisterRequest);
         User savedUser = userRepository.save(user);
-        UserResponse response = UserMapper.buildUserResponse(savedUser);
-        return response;
+        return UserMapper.buildUserResponse(savedUser);
     }
 
     @Override
@@ -33,7 +36,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> findAllUsers() {
         List<User> userList = userRepository.findAll();
-        List<UserResponse> userResponseList = userList.stream().map(UserMapper::buildUserResponse).toList();
-        return userResponseList;
+        return userList.stream().map(UserMapper::buildUserResponse).toList();
     }
 }

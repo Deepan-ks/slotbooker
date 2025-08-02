@@ -12,9 +12,8 @@ import com.deepan.slotbooker.repository.BookingRepository;
 import com.deepan.slotbooker.repository.SlotRepository;
 import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.service.BookingService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +32,7 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
+    @Transactional
     public BookingResponse bookSlot(BookingCreateRequest request) {
         Slot slot = slotRepository.findById(request.getSlotId())
                 .orElseThrow(() -> new ResourceNotFoundException("Slot not found"));
@@ -61,6 +61,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public BookingResponse getBookingById(Long id) {
+        Booking booking = bookingRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Booking not found"));
+        return BookingMapper.buildBookingResponse(booking);
+    }
+
+    @Override
+    @Transactional
     public Boolean deleteBookingForId(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
