@@ -1,6 +1,7 @@
 package com.deepan.slotbooker.dto.venue;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,7 @@ public class VenueCreateRequest {
 
     @NotBlank(message = "Venue location is required")
     private String location;
+
+    @NotNull(message = "Owner is required")
+    private Long ownerId;
 }

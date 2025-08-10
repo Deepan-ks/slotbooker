@@ -8,6 +8,7 @@ import com.deepan.slotbooker.repository.VenueRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class DataLoader {
                         .userName("Deepan")
                         .email("deepan@example.com")
                         .mobileNumber("9876543210")
-                        .password("password123")
+                        .password(new BCryptPasswordEncoder().encode("password123"))
                         .userRole(Role.OWNER)
                         .build());
 
@@ -31,7 +32,7 @@ public class DataLoader {
                         .userName("Ravi")
                         .email("ravi@example.com")
                         .mobileNumber("9123456789")
-                        .password("test123")
+                        .password(new BCryptPasswordEncoder().encode("test123"))
                         .userRole(Role.PLAYER)
                         .build());
 

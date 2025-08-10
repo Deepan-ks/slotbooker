@@ -1,9 +1,7 @@
 package com.deepan.slotbooker.controller;
 
 import com.deepan.slotbooker.dto.sport.SportResponse;
-import com.deepan.slotbooker.mapper.SportsMapper;
-import com.deepan.slotbooker.model.Sport;
-import com.deepan.slotbooker.repository.SportRepository;
+import com.deepan.slotbooker.service.SportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SportController {
 
-    private final SportRepository sportRepository;
+    private final SportService sportService;
 
+    /**
+     * get all sports
+     * @return
+     */
     @GetMapping
     public ResponseEntity<List<SportResponse>> getAllSports(){
-        List<Sport> sportList = sportRepository.findAll();
-        List<SportResponse> responses = sportList.stream().map(SportsMapper::buildSportResponse).toList();
+        List<SportResponse> responses = sportService.fetchAllSports();
         return ResponseEntity.ok(responses);
     }
 }
