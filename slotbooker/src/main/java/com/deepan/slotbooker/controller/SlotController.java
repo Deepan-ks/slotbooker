@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class SlotController {
      * @param request
      * @return
      */
+    @PreAuthorize("hasRole('OWNER')")
     @PostMapping
     public ResponseEntity<SlotResponse> createSlot (@PathVariable Long facilityId, @Valid @RequestBody SlotCreateRequest request) {
         SlotResponse response = slotService.createSlot(facilityId, request);
@@ -37,6 +39,7 @@ public class SlotController {
      * @param end
      * @return
      */
+    @PreAuthorize("hasAnyRole('OWNER','PLAYER')")
     @GetMapping
     public ResponseEntity<List<SlotResponse>> fetchSlotsByFacility(@PathVariable Long facilityId,
                                                                    @RequestParam(required = false) String start,

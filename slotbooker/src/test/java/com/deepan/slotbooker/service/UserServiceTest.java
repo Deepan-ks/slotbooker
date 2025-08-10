@@ -8,13 +8,14 @@ import com.deepan.slotbooker.model.Role;
 import com.deepan.slotbooker.model.User;
 import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.service.impl.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,39 +33,61 @@ class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+
+    private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setUp() {
+        passwordEncoder = new BCryptPasswordEncoder();
+        // Manually inject passwordEncoder if not using Spring context
+        ReflectionTestUtils.setField(userService, "passwordEncoder", passwordEncoder);
+    }
+
     @Test
-    void testUserRegisterService_Success(){
-        //Arrange
-        Long id = 1L;
-
+    void userRegisterService_ShouldEncodePassword_AndSaveUser() {
+        // Arrange
         UserRegisterRequest request = new UserRegisterRequest();
-        request.setName("TestUser");
-        request.setEmail("test@email.com");
+        request.setName("John Doe");
+        request.setMobile("9876543210");
+        request.setPassword("plainPassword");
+        request.setRole(Role.PLAYER.name());
 
-        User user = new User();
-        user.setUserId(id);
-        user.setUserName("TestUser");
-        user.setEmail("test@email.com");
+        Mockito.when(userRepository.findByMobileNumber(request.getMobile()))
+                .thenReturn(Optional.empty());
 
-        UserResponse userResponse = new UserResponse();
-        userResponse.setName("TestUser");
-        userResponse.setId(id);
-        userResponse.setEmail("test@email.com");
+        Mockito.when(userRepository.save(Mockito.any(User.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        when(userRepository.save(user)).thenReturn(user);
+        // Act
+        UserResponse response = userService.userRegisterService(request);
 
-        try(MockedStatic<UserMapper> mockedStatic = Mockito.mockStatic(UserMapper.class)){
-            mockedStatic.when(() -> UserMapper.createUserEntity(request)).thenReturn(user);
-            mockedStatic.when(() -> UserMapper.buildUserResponse(user)).thenReturn(userResponse);
+        // Assert
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        Mockito.verify(userRepository).save(userCaptor.capture());
+        User savedUser = userCaptor.getValue();
 
-            // Act
-            UserResponse response = userService.userRegisterService(request);
+        assertNotEquals("plainPassword", savedUser.getPassword(),
+                "Password must be encoded before saving");
+        assertTrue(passwordEncoder.matches("plainPassword", savedUser.getPassword()),
+                "Encoded password must match the raw password");
 
-            // Assert
-            assertNotNull(response);
-            assertEquals(user.getUserName(), response.getName());
-            verify(userRepository, times(1)).save(user);
-        }
+        assertEquals(request.getName(), response.getName());
+        assertEquals(request.getMobile(), response.getMobile());
+    }
+
+    @Test
+    void userRegisterService_ShouldThrow_WhenMobileAlreadyExists() {
+        // Arrange
+        UserRegisterRequest request = new UserRegisterRequest();
+        request.setMobile("9876543210");
+        request.setPassword("pass");
+
+        Mockito.when(userRepository.findByMobileNumber(request.getMobile()))
+                .thenReturn(Optional.of(new User()));
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> userService.userRegisterService(request), "Should throw if mobile number already registered");
     }
 
     @Test

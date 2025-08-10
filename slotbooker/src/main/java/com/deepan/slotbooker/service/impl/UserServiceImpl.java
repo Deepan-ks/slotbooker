@@ -9,6 +9,7 @@ import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +20,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
     public UserResponse userRegisterService(UserRegisterRequest userRegisterRequest) {
+        if (userRepository.findByMobileNumber(userRegisterRequest.getMobile()).isPresent()) {
+            throw new IllegalArgumentException("Mobile number already registered");
+        }
         User user = UserMapper.createUserEntity(userRegisterRequest);
+        user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
         User savedUser = userRepository.save(user);
         return UserMapper.buildUserResponse(savedUser);
     }
