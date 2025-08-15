@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.booking.BookingCreateRequest;
+import com.deepan.slotbooker.dto.booking.BookingRequest;
 import com.deepan.slotbooker.dto.booking.BookingResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.BookingMapper;
@@ -57,7 +57,7 @@ class BookingServiceTest {
         user.setUserId(id);
 
         // Booking Request
-        BookingCreateRequest request = new BookingCreateRequest();
+        BookingRequest request = new BookingRequest();
         request.setSlotId(id);
         request.setPlayerId(id);
 
@@ -99,7 +99,7 @@ class BookingServiceTest {
         slot.setIsBooked(true);
 
         // Booking Request
-        BookingCreateRequest request = new BookingCreateRequest();
+        BookingRequest request = new BookingRequest();
         request.setSlotId(id);
         request.setPlayerId(id);
 

@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.controller;
 
-import com.deepan.slotbooker.dto.facility.FacilityCreateRequest;
+import com.deepan.slotbooker.dto.facility.FacilityRequest;
 import com.deepan.slotbooker.dto.facility.FacilityResponse;
 import com.deepan.slotbooker.service.FacilityService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class FacilityController {
      */
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping
-    public ResponseEntity<FacilityResponse> addFacility(@PathVariable Long venueId, @RequestBody FacilityCreateRequest request) {
+    public ResponseEntity<FacilityResponse> addFacility(@PathVariable Long venueId, @RequestBody FacilityRequest request) {
         FacilityResponse response = facilityService.addFacility(venueId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

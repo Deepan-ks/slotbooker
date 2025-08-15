@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.controller;
 
-import com.deepan.slotbooker.dto.slot.SlotCreateRequest;
+import com.deepan.slotbooker.dto.slot.SlotRequest;
 import com.deepan.slotbooker.dto.slot.SlotResponse;
 import com.deepan.slotbooker.service.SlotService;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class SlotController {
      */
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping
-    public ResponseEntity<SlotResponse> createSlot (@PathVariable Long facilityId, @Valid @RequestBody SlotCreateRequest request) {
+    public ResponseEntity<SlotResponse> createSlot (@PathVariable Long facilityId, @Valid @RequestBody SlotRequest request) {
         SlotResponse response = slotService.createSlot(facilityId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.slot.SlotCreateRequest;
+import com.deepan.slotbooker.dto.slot.SlotRequest;
 import com.deepan.slotbooker.dto.slot.SlotResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.SlotMapper;
@@ -43,7 +43,7 @@ public class SlotServiceTest {
         // Arrange
         Long facilityId = 1L;
 
-        SlotCreateRequest request = new SlotCreateRequest();
+        SlotRequest request = new SlotRequest();
         request.setStartTime(LocalDateTime.of(2025,8,25,5,30));
         request.setEndTime(LocalDateTime.of(2025,8,25,6,30));
 
@@ -83,7 +83,7 @@ public class SlotServiceTest {
     void testCreateSlot_FacilityNotFound() {
         // Arrange
         Long facilityId = 1L;
-        SlotCreateRequest request = new SlotCreateRequest();
+        SlotRequest request = new SlotRequest();
 
         when(facilityRepository.findById(facilityId)).thenReturn(Optional.empty());
 

@@ -1,23 +1,21 @@
 package com.deepan.slotbooker.dto.booking;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.deepan.slotbooker.model.enums.BookingStatus;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 public class BookingResponse {
-    private Long bookingId;
-    private Long slotId;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private String facilityName;
-    private String venueName;
-    private String playerName;
-    private String status;
+    Long bookingId;
+    Long slotId;
+    LocalDateTime startTime;
+    LocalDateTime endTime;
+    String facilityName;
+    String venueName;
+    Long playerId;
+    String playerName;
+    String sportName;
+    BookingStatus status;
 }

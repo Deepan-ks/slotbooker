@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VenueCreateRequest {
+public class VenueRequest {
 
     @NotBlank(message = "Venue name is required")
-    private String name;
+    private String venueName;
 
     @NotBlank(message = "Venue location is required")
     private String location;

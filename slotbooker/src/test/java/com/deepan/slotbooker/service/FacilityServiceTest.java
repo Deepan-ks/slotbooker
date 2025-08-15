@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.facility.FacilityCreateRequest;
+import com.deepan.slotbooker.dto.facility.FacilityRequest;
 import com.deepan.slotbooker.dto.facility.FacilityResponse;
 import com.deepan.slotbooker.mapper.FacilityMapper;
 import com.deepan.slotbooker.model.Facility;
@@ -46,7 +46,7 @@ class FacilityServiceTest {
         long venueId = 1L;
         Long sportId = 10L;
 
-        FacilityCreateRequest request = new FacilityCreateRequest();
+        FacilityRequest request = new FacilityRequest();
         request.setName("Badminton Court");
         request.setSportId(sportId);
 
@@ -89,7 +89,7 @@ class FacilityServiceTest {
     void testAddFacility_VenueNotFound() {
         // Arrange
         Long venueId = 1L;
-        FacilityCreateRequest request = new FacilityCreateRequest();
+        FacilityRequest request = new FacilityRequest();
         request.setSportId(10L);
 
         when(venueRepository.findById(venueId)).thenReturn(Optional.empty());
@@ -104,7 +104,7 @@ class FacilityServiceTest {
         Long venueId = 1L;
         Long sportId = 10L;
 
-        FacilityCreateRequest request = new FacilityCreateRequest();
+        FacilityRequest request = new FacilityRequest();
         request.setSportId(sportId);
 
         Venue venue = new Venue();

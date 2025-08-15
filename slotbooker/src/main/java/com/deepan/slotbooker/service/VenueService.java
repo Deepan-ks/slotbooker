@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.venue.VenueCreateRequest;
+import com.deepan.slotbooker.dto.venue.VenueRequest;
 import com.deepan.slotbooker.dto.venue.VenueResponse;
 
 import java.util.List;
@@ -17,5 +17,5 @@ public interface VenueService {
      * @param request
      * @return
      */
-    VenueResponse createVenue(VenueCreateRequest request);
+    VenueResponse createVenue(VenueRequest request);
 }

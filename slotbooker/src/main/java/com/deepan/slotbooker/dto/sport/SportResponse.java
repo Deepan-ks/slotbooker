@@ -2,11 +2,9 @@ package com.deepan.slotbooker.dto.sport;
 
 import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 public class SportResponse {
-    private Long id;
-    private String name;
+    Long sportId;
+    String sportName;
 }

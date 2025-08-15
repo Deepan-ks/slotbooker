@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.facility.FacilityCreateRequest;
+import com.deepan.slotbooker.dto.facility.FacilityRequest;
 import com.deepan.slotbooker.dto.facility.FacilityResponse;
 import com.deepan.slotbooker.mapper.FacilityMapper;
 import com.deepan.slotbooker.model.Facility;
@@ -37,7 +37,7 @@ public class FacilityServiceImpl implements FacilityService {
 
     @Override
     @Transactional
-    public FacilityResponse addFacility(Long venueId, FacilityCreateRequest request) {
+    public FacilityResponse addFacility(Long venueId, FacilityRequest request) {
         Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new IllegalArgumentException("Venue not found"));
         Sport sport = sportRepository.findById(request.getSportId()).orElseThrow(() -> new IllegalArgumentException("Sport not found"));
         Facility facility = FacilityMapper.createFacilityEntity(request, venue, sport);

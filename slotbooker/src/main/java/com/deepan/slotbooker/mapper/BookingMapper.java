@@ -1,7 +1,6 @@
 package com.deepan.slotbooker.mapper;
 
-import com.deepan.slotbooker.dto.BookingDTO;
-import com.deepan.slotbooker.dto.booking.BookingCreateRequest;
+import com.deepan.slotbooker.dto.booking.BookingRequest;
 import com.deepan.slotbooker.dto.booking.BookingResponse;
 import com.deepan.slotbooker.model.Booking;
 import com.deepan.slotbooker.model.enums.BookingStatus;
@@ -10,26 +9,7 @@ import com.deepan.slotbooker.model.User;
 
 public class BookingMapper {
 
-    /**
-     * Builds an internal BookingDTO for cross-layer communication or legacy use.
-     */
-    public static BookingDTO mapToBookingDTO (Booking booking){
-        return BookingDTO.builder()
-                .id(booking.getBookingId())
-                .slotId(booking.getSlot().getSlotId())
-                .playerId(booking.getPlayer().getUserId())
-                .status(booking.getStatus())
-                .build();
-    }
-
-    /**
-     * Constructs a Booking entity from BookingDTO (used internally if needed).
-     */
-    public static Booking mapToBookingEntity(BookingDTO bookingDTO){
-        Booking booking = new Booking();
-        booking.setStatus(bookingDTO.getStatus());
-        return booking;
-    }
+    private BookingMapper() {}
 
     /**
      * Converts a Booking entity into a response object.
@@ -41,16 +21,17 @@ public class BookingMapper {
                 .startTime(booking.getSlot().getStartTime())
                 .endTime(booking.getSlot().getEndTime())
                 .facilityName(booking.getSlot().getFacility().getFacilityName())
-                .venueName(booking.getSlot().getFacility().getVenue().getVenueName())
+                .sportName(booking.getSlot().getFacility().getSport().getSportName())
+                .playerId(booking.getPlayer().getUserId())
                 .playerName(booking.getPlayer().getUserName())
-                .status(booking.getStatus().name())
+                .status(booking.getStatus())
                 .build();
     }
 
     /**
      * Creates a Booking entity from request, with reserved Slot and Player.
      */
-    public static Booking createBookingEntity(BookingCreateRequest request, Slot slot, User player) {
+    public static Booking createBookingEntity(BookingRequest request, Slot slot, User player) {
         return Booking.builder()
                 .slot(slot)
                 .player(player)

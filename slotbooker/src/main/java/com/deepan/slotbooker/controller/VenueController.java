@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.controller;
 
-import com.deepan.slotbooker.dto.venue.VenueCreateRequest;
+import com.deepan.slotbooker.dto.venue.VenueRequest;
 import com.deepan.slotbooker.dto.venue.VenueResponse;
 import com.deepan.slotbooker.service.VenueService;
 import jakarta.validation.Valid;
@@ -37,7 +37,7 @@ public class VenueController {
      */
     @PreAuthorize("hasRole('OWNER')")
     @PostMapping
-    public ResponseEntity<VenueResponse> registerVenue(@Valid @RequestBody VenueCreateRequest request){
+    public ResponseEntity<VenueResponse> registerVenue(@Valid @RequestBody VenueRequest request){
         VenueResponse response = venueService.createVenue(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

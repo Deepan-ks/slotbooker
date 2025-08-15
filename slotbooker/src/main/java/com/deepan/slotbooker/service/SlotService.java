@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.slot.SlotCreateRequest;
+import com.deepan.slotbooker.dto.slot.SlotRequest;
 import com.deepan.slotbooker.dto.slot.SlotResponse;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public interface SlotService {
      * @param request
      * @return
      */
-    SlotResponse createSlot(Long facilityId, SlotCreateRequest request);
+    SlotResponse createSlot(Long facilityId, SlotRequest request);
 
     /**
      * Get slot by facility

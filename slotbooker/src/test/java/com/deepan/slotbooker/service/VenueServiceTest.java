@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.venue.VenueCreateRequest;
+import com.deepan.slotbooker.dto.venue.VenueRequest;
 import com.deepan.slotbooker.dto.venue.VenueResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.VenueMapper;
@@ -43,7 +43,7 @@ class VenueServiceTest {
         user.setUserId(1L);
         user.setUserRole(Role.OWNER);
 
-        VenueCreateRequest request = new VenueCreateRequest();
+        VenueRequest request = new VenueRequest();
         request.setName("Arena X");
         request.setLocation("Coimbatore");
         request.setOwnerId(1L);
@@ -78,7 +78,7 @@ class VenueServiceTest {
         user.setUserId(1L);
         user.setUserRole(Role.PLAYER);
 
-        VenueCreateRequest request = new VenueCreateRequest();
+        VenueRequest request = new VenueRequest();
         request.setName("Arena X");
         request.setLocation("Coimbatore");
         request.setOwnerId(1L);
@@ -95,7 +95,7 @@ class VenueServiceTest {
         //Arrange
         Long id =1L;
 
-        VenueCreateRequest request = new VenueCreateRequest();
+        VenueRequest request = new VenueRequest();
         request.setName("Arena X");
         request.setLocation("Coimbatore");
         request.setOwnerId(1L);

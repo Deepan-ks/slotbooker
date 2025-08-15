@@ -1,6 +1,5 @@
 package com.deepan.slotbooker.mapper;
 
-import com.deepan.slotbooker.dto.UserDTO;
 import com.deepan.slotbooker.dto.user.UserRegisterRequest;
 import com.deepan.slotbooker.dto.user.UserResponse;
 import com.deepan.slotbooker.model.enums.Role;
@@ -8,41 +7,18 @@ import com.deepan.slotbooker.model.User;
 
 public class UserMapper {
 
-    /**
-     * Builds an internal UserDTO for cross-layer communication or legacy use.
-     */
-    public static UserDTO mapToUserDTO(User user) {
-        return UserDTO.builder()
-                .id(user.getUserId())
-                .name(user.getUserName())
-                .mobile(user.getMobileNumber())
-                .email(user.getEmail())
-                .role(user.getUserRole().name())
-                .build();
-    }
-
-    /**
-     * Constructs a User entity from UserDTO (used internally if needed).
-     */
-    public static User mapToUserEntity(UserDTO userDTO) {
-        User user = new User();
-        user.setUserName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setMobileNumber(userDTO.getMobile());
-        // Role and password set elsewhere (registration logic)
-        return user;
-    }
+    private UserMapper() {}
 
     /**
      * Converts registration request into a User entity.
      */
     public static User createUserEntity(UserRegisterRequest request) {
         return User.builder()
-                .userName(request.getName())
+                .userName(request.getUserName())
                 .email(request.getEmail())
-                .password(request.getPassword()) // for now, plain-text or hashed later
-                .userRole(Role.valueOf(request.getRole()))
-                .mobileNumber(request.getMobile())
+                .mobileNumber(request.getMobileNumber())
+                .userRole(request.getUserRole())
+                // password encoding will be handled in service layer
                 .build();
     }
 
@@ -51,11 +27,11 @@ public class UserMapper {
      */
     public static UserResponse buildUserResponse(User user) {
         return UserResponse.builder()
-                .id(user.getUserId())
-                .name(user.getUserName())
+                .userId(user.getUserId())
+                .userName(user.getUserName())
                 .email(user.getEmail())
-                .role(user.getUserRole().name())
-                .mobile(user.getMobileNumber())
+                .mobileNumber(user.getMobileNumber())
+                .userRole(user.getUserRole())
                 .build();
     }
 }

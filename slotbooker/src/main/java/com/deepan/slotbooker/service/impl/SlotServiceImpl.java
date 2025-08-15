@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.slot.SlotCreateRequest;
+import com.deepan.slotbooker.dto.slot.SlotRequest;
 import com.deepan.slotbooker.dto.slot.SlotResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.SlotMapper;
@@ -28,7 +28,7 @@ public class SlotServiceImpl implements SlotService {
 
     @Override
     @Transactional
-    public SlotResponse createSlot(Long facilityId, SlotCreateRequest request) {
+    public SlotResponse createSlot(Long facilityId, SlotRequest request) {
         Facility facility = facilityRepository.findById(facilityId).orElseThrow(() -> new ResourceNotFoundException("Facility not found"));
         Slot newSlot = SlotMapper.createSlotEntity(request, facility);
         Slot savedSlot = slotRepository.save(newSlot);

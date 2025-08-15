@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.booking.BookingCreateRequest;
+import com.deepan.slotbooker.dto.booking.BookingRequest;
 import com.deepan.slotbooker.dto.booking.BookingResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.BookingMapper;
@@ -33,7 +33,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponse bookSlot(BookingCreateRequest request) {
+    public BookingResponse bookSlot(BookingRequest request) {
         Slot slot = slotRepository.findById(request.getSlotId())
                 .orElseThrow(() -> new ResourceNotFoundException("Slot not found"));
 

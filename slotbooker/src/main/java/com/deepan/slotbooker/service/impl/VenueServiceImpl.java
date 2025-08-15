@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.venue.VenueCreateRequest;
+import com.deepan.slotbooker.dto.venue.VenueRequest;
 import com.deepan.slotbooker.dto.venue.VenueResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.VenueMapper;
@@ -33,7 +33,7 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     @Transactional
-    public VenueResponse createVenue(VenueCreateRequest request) {
+    public VenueResponse createVenue(VenueRequest request) {
         User userFound = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
         if(Role.PLAYER.equals(userFound.getUserRole())){
             throw new IllegalStateException("User is not allowed to create venue");

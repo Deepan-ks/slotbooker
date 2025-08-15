@@ -1,17 +1,13 @@
 package com.deepan.slotbooker.dto.venue;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 public class VenueResponse {
-    private Long id;
-    private String name;
-    private String location;
-    private Long ownerId;
+    Long venueId;
+    String venueName;
+    String location;
+    Long ownerId;
+    String ownerName;
 }

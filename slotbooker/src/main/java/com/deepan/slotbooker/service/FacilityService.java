@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.facility.FacilityCreateRequest;
+import com.deepan.slotbooker.dto.facility.FacilityRequest;
 import com.deepan.slotbooker.dto.facility.FacilityResponse;
 
 import java.util.List;
@@ -19,5 +19,5 @@ public interface FacilityService {
      * @param request
      * @return
      */
-    FacilityResponse addFacility(Long venueId, FacilityCreateRequest request);
+    FacilityResponse addFacility(Long venueId, FacilityRequest request);
 }

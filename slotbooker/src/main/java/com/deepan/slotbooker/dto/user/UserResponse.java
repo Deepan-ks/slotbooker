@@ -1,15 +1,14 @@
 package com.deepan.slotbooker.dto.user;
 
+import com.deepan.slotbooker.model.enums.Role;
 import lombok.*;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 @Builder
 public class UserResponse {
-    private Long id;
-    private String name;
-    private String email;
-    private String role;
-    private String mobile;
+    Long userId;
+    String userName;
+    String email;
+    Role userRole;
+    String mobileNumber;
 }
