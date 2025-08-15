@@ -3,7 +3,7 @@ package com.deepan.slotbooker.mapper;
 import com.deepan.slotbooker.dto.UserDTO;
 import com.deepan.slotbooker.dto.user.UserRegisterRequest;
 import com.deepan.slotbooker.dto.user.UserResponse;
-import com.deepan.slotbooker.model.Role;
+import com.deepan.slotbooker.model.enums.Role;
 import com.deepan.slotbooker.model.User;
 
 public class UserMapper {

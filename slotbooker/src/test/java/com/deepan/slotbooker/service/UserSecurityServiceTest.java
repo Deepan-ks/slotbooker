@@ -1,10 +1,9 @@
 package com.deepan.slotbooker.service;
 
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
-import com.deepan.slotbooker.model.Role;
+import com.deepan.slotbooker.model.enums.Role;
 import com.deepan.slotbooker.model.User;
 import com.deepan.slotbooker.repository.UserRepository;
-import com.deepan.slotbooker.security.UserSecurity;
 import com.deepan.slotbooker.service.impl.UserSecurityServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

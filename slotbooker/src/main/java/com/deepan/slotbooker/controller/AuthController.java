@@ -2,9 +2,14 @@ package com.deepan.slotbooker.controller;
 
 import com.deepan.slotbooker.dto.auth.AuthRequest;
 import com.deepan.slotbooker.dto.auth.AuthResponse;
+import com.deepan.slotbooker.dto.user.UserRegisterRequest;
+import com.deepan.slotbooker.dto.user.UserResponse;
 import com.deepan.slotbooker.security.jwt.JwtTokenProvider;
+import com.deepan.slotbooker.service.UserService;
+import com.deepan.slotbooker.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +29,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request) {
@@ -43,5 +49,16 @@ public class AuthController {
         } catch (Exception ex) {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
+    }
+
+    /**
+     * Register a new user
+     * @param registerRequest
+     * @return
+     */
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegisterRequest registerRequest){
+        UserResponse response = userService.userRegisterService(registerRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

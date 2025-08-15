@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.dto.auth;
 
-import com.deepan.slotbooker.model.Role;
+import com.deepan.slotbooker.model.enums.Role;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

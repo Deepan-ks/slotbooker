@@ -1,6 +1,7 @@
 package com.deepan.slotbooker.config;
 
 import com.deepan.slotbooker.model.*;
+import com.deepan.slotbooker.model.enums.Role;
 import com.deepan.slotbooker.repository.FacilityRepository;
 import com.deepan.slotbooker.repository.SportRepository;
 import com.deepan.slotbooker.repository.UserRepository;

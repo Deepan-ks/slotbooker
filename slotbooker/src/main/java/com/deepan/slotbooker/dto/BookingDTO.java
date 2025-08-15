@@ -1,6 +1,6 @@
 package com.deepan.slotbooker.dto;
 
-import com.deepan.slotbooker.model.BookingStatus;
+import com.deepan.slotbooker.model.enums.BookingStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

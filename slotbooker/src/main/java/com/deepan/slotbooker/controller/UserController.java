@@ -30,18 +30,6 @@ public class UserController {
     }
 
     /**
-     * Register a new user
-     * @param registerRequest
-     * @return
-     */
-    @PreAuthorize("hasAnyRole('OWNER','PLAYER')")
-    @PostMapping("/register")
-    public ResponseEntity<UserResponse> registerUser(@RequestBody UserRegisterRequest registerRequest){
-        UserResponse response = userService.userRegisterService(registerRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    /**
      * Get user by id
      * @param id
      * @return

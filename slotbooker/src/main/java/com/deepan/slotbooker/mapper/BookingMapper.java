@@ -4,7 +4,7 @@ import com.deepan.slotbooker.dto.BookingDTO;
 import com.deepan.slotbooker.dto.booking.BookingCreateRequest;
 import com.deepan.slotbooker.dto.booking.BookingResponse;
 import com.deepan.slotbooker.model.Booking;
-import com.deepan.slotbooker.model.BookingStatus;
+import com.deepan.slotbooker.model.enums.BookingStatus;
 import com.deepan.slotbooker.model.Slot;
 import com.deepan.slotbooker.model.User;
 

@@ -4,7 +4,7 @@ import com.deepan.slotbooker.dto.venue.VenueCreateRequest;
 import com.deepan.slotbooker.dto.venue.VenueResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.VenueMapper;
-import com.deepan.slotbooker.model.Role;
+import com.deepan.slotbooker.model.enums.Role;
 import com.deepan.slotbooker.model.User;
 import com.deepan.slotbooker.model.Venue;
 import com.deepan.slotbooker.repository.UserRepository;

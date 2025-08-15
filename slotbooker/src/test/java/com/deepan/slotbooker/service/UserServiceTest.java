@@ -4,7 +4,7 @@ import com.deepan.slotbooker.dto.user.UserRegisterRequest;
 import com.deepan.slotbooker.dto.user.UserResponse;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.mapper.UserMapper;
-import com.deepan.slotbooker.model.Role;
+import com.deepan.slotbooker.model.enums.Role;
 import com.deepan.slotbooker.model.User;
 import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.service.impl.UserServiceImpl;
