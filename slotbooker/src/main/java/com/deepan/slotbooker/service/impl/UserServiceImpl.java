@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponse userRegisterService(UserRegisterRequest userRegisterRequest) {
-        if (userRepository.findByMobileNumber(userRegisterRequest.getMobile()).isPresent()) {
+        if (userRepository.findByMobileNumber(userRegisterRequest.getMobileNumber()).isPresent()) {
             throw new IllegalArgumentException("Mobile number already registered");
         }
         User user = UserMapper.createUserEntity(userRegisterRequest);

@@ -11,24 +11,23 @@ import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.repository.VenueRepository;
 import com.deepan.slotbooker.service.VenueService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class VenueServiceImpl implements VenueService {
-
-    @Autowired
-    private VenueRepository venueRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    
+    private final VenueRepository venueRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<VenueResponse> fetchAllVenues() {
         List<Venue> venueList = venueRepository.findAll();
-        return venueList.stream().map(VenueMapper::buildVenueResponse).toList();
+        return VenueMapper.venueResponseList(venueList);
     }
 
     @Override
@@ -42,4 +41,28 @@ public class VenueServiceImpl implements VenueService {
         Venue savedVenue = venueRepository.save(venue);
         return VenueMapper.buildVenueResponse(savedVenue);
     }
+
+    @Override
+    public VenueResponse getVenue(Long venueId) {
+        Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
+        return VenueMapper.buildVenueResponse(venue);
+    }
+
+    @Override
+    public VenueResponse updateVenue(Long venueId, VenueRequest updateRequest) {
+        Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
+        User userExists = userRepository.findById(updateRequest.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("provided user not found"));
+        if(!Role.OWNER.equals(userExists.getUserRole())){
+            throw new IllegalArgumentException("Provide user is not owner, please update user role");
+        }
+        VenueMapper.updateVenue(venue,updateRequest,userExists);
+        return VenueMapper.buildVenueResponse(venueRepository.save(venue));
+    }
+
+    @Override
+    public void deleteVenue(Long venueId) {
+        Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
+        venueRepository.delete(venue);
+    }
+
 }

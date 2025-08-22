@@ -9,5 +9,6 @@ public class VenueResponse {
     String venueName;
     String location;
     Long ownerId;
+    Long contactNumber;
     String ownerName;
 }

@@ -13,32 +13,45 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/venues")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class VenueController {
 
     private final VenueService venueService;
 
-    /**
-     * get all venues
-     * @return
-     */
+    // List all venues (PLAYER or OWNER)
+    @GetMapping("/venues")
     @PreAuthorize("hasAnyRole('OWNER','PLAYER')")
-    @GetMapping
     public ResponseEntity<List<VenueResponse>> getAllVenues(){
-        List <VenueResponse> responses = venueService.fetchAllVenues();
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(venueService.fetchAllVenues());
     }
 
-    /**
-     * Create a new venue
-     * @param request
-     * @return
-     */
+    // create new venue (OWNER)
+    @PostMapping("/venues")
     @PreAuthorize("hasRole('OWNER')")
-    @PostMapping
     public ResponseEntity<VenueResponse> registerVenue(@Valid @RequestBody VenueRequest request){
-        VenueResponse response = venueService.createVenue(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(venueService.createVenue(request));
+    }
+
+    // get venue by ID (PLAYER or OWNER)
+    @GetMapping("/venues/{id}")
+    @PreAuthorize("hasAnyRole('OWNER','PLAYER')")
+    public ResponseEntity<VenueResponse> getVenue(@PathVariable Long id){
+        return ResponseEntity.ok(venueService.getVenue(id));
+    }
+
+    // update venue by ID (OWNER)
+    @PutMapping("/venues/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<VenueResponse> updateVenue(@PathVariable Long id, @Valid @RequestBody VenueRequest updateRequest){
+        return ResponseEntity.ok(venueService.updateVenue(id, updateRequest));
+    }
+
+    // delete venue by ID (OWNER)
+    @DeleteMapping("/venues/{id}")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<Void> deleteVenue(@PathVariable Long id){
+        venueService.deleteVenue(id);
+        return ResponseEntity.noContent().build();
     }
 }

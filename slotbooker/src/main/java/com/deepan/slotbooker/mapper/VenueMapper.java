@@ -5,6 +5,7 @@ import com.deepan.slotbooker.dto.venue.VenueResponse;
 import com.deepan.slotbooker.model.User;
 import com.deepan.slotbooker.model.Venue;
 
+import java.util.List;
 public class VenueMapper {
 
     private VenueMapper() {}
@@ -32,4 +33,17 @@ public class VenueMapper {
                 .ownerName(venue.getOwnerId().getUserName())
                 .build();
     }
+
+    public static void updateVenue(Venue venue, VenueRequest request, User owner){
+        venue.setVenueName(request.getVenueName());
+        venue.setDescription(request.getDescription());
+        venue.setLocation(request.getLocation());
+        venue.setContactInfo(request.getContactNumber());
+        venue.setOwnerId(owner);
+    }
+
+    public static List<VenueResponse> venueResponseList(List<Venue> venueList){
+        return venueList.stream().map(VenueMapper::buildVenueResponse).toList();
+    }
+
 }

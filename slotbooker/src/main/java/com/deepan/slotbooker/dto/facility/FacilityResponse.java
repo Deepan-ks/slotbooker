@@ -9,6 +9,5 @@ public class FacilityResponse {
     String facilityName;
     Double pricePerHour;
     Long venueId;
-    String venueName;
     String sportName;
 }

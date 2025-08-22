@@ -18,4 +18,10 @@ public interface VenueService {
      * @return
      */
     VenueResponse createVenue(VenueRequest request);
+
+    VenueResponse getVenue(Long venueId);
+
+    VenueResponse updateVenue(Long venueId, VenueRequest updateRequest);
+
+    void deleteVenue(Long id);
 }

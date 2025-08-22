@@ -6,18 +6,13 @@ import com.deepan.slotbooker.dto.facility.FacilityResponse;
 import java.util.List;
 
 public interface FacilityService {
-    /**
-     * Get facilities by venue
-     * @param venueId
-     * @return
-     */
-    List<FacilityResponse> getFacilitiesByVenue(Long venueId);
+    FacilityResponse saveFacility(FacilityRequest request);
 
-    /**
-     * Adds a new facility to venue
-     * @param venueId
-     * @param request
-     * @return
-     */
-    FacilityResponse addFacility(Long venueId, FacilityRequest request);
+    FacilityResponse getFacilityById(Long facilityId);
+
+    List<FacilityResponse> getAllFacilityByVenue(Long venueId);
+
+    FacilityResponse updateFacilityById(Long facilityId, FacilityRequest request);
+
+    void deleteFacilityById(Long facilityId);
 }
