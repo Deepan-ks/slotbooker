@@ -1,9 +1,10 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.facility.FacilityRequest;
-import com.deepan.slotbooker.dto.facility.FacilityResponse;
+import com.deepan.slotbooker.dto.facilityDTO.FacilityCreateRequest;
+import com.deepan.slotbooker.dto.facilityDTO.FacilityResponse;
+import com.deepan.slotbooker.dto.facilityDTO.FacilityUpdateRequest;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
-import com.deepan.slotbooker.mapper.FacilityMapper;
+import com.deepan.slotbooker.mapper.Mapper;
 import com.deepan.slotbooker.model.Facility;
 import com.deepan.slotbooker.model.Sport;
 import com.deepan.slotbooker.model.Venue;
@@ -12,7 +13,6 @@ import com.deepan.slotbooker.repository.SportRepository;
 import com.deepan.slotbooker.repository.VenueRepository;
 import com.deepan.slotbooker.service.FacilityService;
 import jakarta.transaction.Transactional;
-import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,50 +28,61 @@ public class FacilityServiceImpl implements FacilityService {
     private final SportRepository sportRepository;
 
     @Override
-    public FacilityResponse saveFacility(FacilityRequest request) {
-        Venue venue = venueRepository.findById(request.getVenueId())
+    @Transactional
+    public FacilityResponse addFacility(Long venueId, FacilityCreateRequest request) {
+        Venue venue = venueRepository.findById(venueId)
                 .orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
         Sport sport = sportRepository.findById(request.getSportId())
                 .orElseThrow(() -> new ResourceNotFoundException("Sport not found"));
 
-        Facility facility = FacilityMapper.createFacilityEntity(request, venue, sport);
-        Facility saved = facilityRepository.save(facility);
-        return FacilityMapper.buildFacilityResponse(saved);
+        Facility facility = Facility.builder()
+                .name(request.getName())
+                .pricePerHour(request.getPricePerHour())
+                .venue(venue)
+                .sport(sport)
+                .build();
+
+        Facility newFacility = facilityRepository.save(facility);
+        return Mapper.buildFacilityResponse(newFacility);
     }
 
     @Override
-    public FacilityResponse getFacilityById(Long facilityId) {
-        Facility facility = facilityRepository.findById(facilityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Facility not found"));
-        return FacilityMapper.buildFacilityResponse(facility);
-    }
-
-    @Override
-    public List<FacilityResponse> getAllFacilityByVenue(Long venueId) {
+    public List<FacilityResponse> getFacilitiesByVenue(Long venueId) {
         Venue venue = venueRepository.findById(venueId)
                 .orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
         List<Facility> facilities = facilityRepository.findByVenue(venue);
-        return FacilityMapper.facilityResponseList(facilities);
+        return Mapper.buildFacilityResponseList(facilities);
     }
 
     @Override
-    public FacilityResponse updateFacilityById(Long facilityId, FacilityRequest request) {
-        Facility facility = facilityRepository.findById(facilityId)
+    @Transactional
+    public FacilityResponse updateFacility(Long facilityId, FacilityUpdateRequest request) {
+        Facility existingFacility = facilityRepository.findById(facilityId)
                 .orElseThrow(() -> new ResourceNotFoundException("Facility not found"));
-
-        Venue venue = venueRepository.findById(request.getVenueId())
-                .orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
-        Sport sport = sportRepository.findById(request.getSportId())
+        Sport existingSport = sportRepository.findById(request.getSportId())
                 .orElseThrow(() -> new ResourceNotFoundException("Sport not found"));
 
-        FacilityMapper.updateEntity(facility, request, venue, sport);
-        return FacilityMapper.buildFacilityResponse(facilityRepository.save(facility));
+        if (request.getName() != null) {
+            existingFacility.setName(request.getName());
+        }
+        if (request.getPricePerHour() != null) {
+            existingFacility.setPricePerHour(request.getPricePerHour());
+        }
+        if(request.getSportId() != null){
+            existingFacility.setSport(existingSport);
+        }
+
+        Facility updatedFacility = facilityRepository.save(existingFacility);
+        return Mapper.buildFacilityResponse(updatedFacility);
     }
 
     @Override
-    public void deleteFacilityById(Long facilityId) {
-        Facility facility = facilityRepository.findById(facilityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Facility not found"));
-        facilityRepository.delete(facility);
+    @Transactional
+    public Boolean deleteFacility(Long facilityId) {
+        if (facilityRepository.existsById(facilityId)) {
+            facilityRepository.deleteById(facilityId);
+            return true;
+        }
+        return false;
     }
 }

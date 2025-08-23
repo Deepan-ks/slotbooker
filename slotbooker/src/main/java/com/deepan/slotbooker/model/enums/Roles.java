@@ -1,5 +1,5 @@
 package com.deepan.slotbooker.model.enums;
 
-public enum UserStatus {
-    ACTIVE, INACTIVE
+public enum Roles {
+    PLAYER, OWNER, ADMIN
 }

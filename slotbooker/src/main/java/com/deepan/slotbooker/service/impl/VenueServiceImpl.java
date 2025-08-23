@@ -1,12 +1,13 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.venue.VenueRequest;
-import com.deepan.slotbooker.dto.venue.VenueResponse;
+import com.deepan.slotbooker.dto.venueDTO.VenueCreateRequest;
+import com.deepan.slotbooker.dto.venueDTO.VenueResponse;
+import com.deepan.slotbooker.dto.venueDTO.VenueUpdateRequest;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
-import com.deepan.slotbooker.mapper.VenueMapper;
-import com.deepan.slotbooker.model.enums.Role;
+import com.deepan.slotbooker.mapper.Mapper;
 import com.deepan.slotbooker.model.User;
 import com.deepan.slotbooker.model.Venue;
+import com.deepan.slotbooker.model.enums.Roles;
 import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.repository.VenueRepository;
 import com.deepan.slotbooker.service.VenueService;
@@ -25,44 +26,80 @@ public class VenueServiceImpl implements VenueService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
+    public VenueResponse createVenue(VenueCreateRequest request, Long ownerId) {
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
+
+        // Business logic: only owners can create venues
+        if (!Roles.OWNER.equals(owner.getRole())) {
+            throw new IllegalArgumentException("Only owners can create a venue.");
+        }
+
+        Venue venue = Venue.builder()
+                .name(request.getName())
+                .city(request.getCity())
+                .address(request.getAddress())
+                .mobileNumber(request.getMobileNumber())
+                .owner(owner)
+                .type(request.getType())
+                .build();
+
+        Venue savedVenue = venueRepository.save(venue);
+        return Mapper.buildVenueResponse(savedVenue);
+    }
+
+    @Override
     public List<VenueResponse> fetchAllVenues() {
-        List<Venue> venueList = venueRepository.findAll();
-        return VenueMapper.venueResponseList(venueList);
+        List<Venue> venues = venueRepository.findAll();
+        return Mapper.buildVenueResponseList(venues);
+    }
+
+    @Override
+    public List<VenueResponse> fetchVenuesByOwner(Long ownerId) {
+        List<Venue> venues = venueRepository.findByOwnerId(ownerId);
+        return Mapper.buildVenueResponseList(venues);
+    }
+
+    @Override
+    public List<VenueResponse> fetchVenuesByCity(String city) {
+        List<Venue> venues = venueRepository.findByCity(city);
+        return Mapper.buildVenueResponseList(venues);
     }
 
     @Override
     @Transactional
-    public VenueResponse createVenue(VenueRequest request) {
-        User userFound = userRepository.findById(request.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("Owner not found"));
-        if(Role.PLAYER.equals(userFound.getUserRole())){
-            throw new IllegalStateException("User is not allowed to create venue");
+    public VenueResponse updateVenue(Long venueId, VenueUpdateRequest request) {
+        Venue existingVenue = venueRepository.findById(venueId)
+                .orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
+
+        if (request.getName() != null) {
+            existingVenue.setName(request.getName());
         }
-        Venue venue = VenueMapper.createVenueEntity(request, userFound);
-        Venue savedVenue = venueRepository.save(venue);
-        return VenueMapper.buildVenueResponse(savedVenue);
-    }
-
-    @Override
-    public VenueResponse getVenue(Long venueId) {
-        Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
-        return VenueMapper.buildVenueResponse(venue);
-    }
-
-    @Override
-    public VenueResponse updateVenue(Long venueId, VenueRequest updateRequest) {
-        Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
-        User userExists = userRepository.findById(updateRequest.getOwnerId()).orElseThrow(() -> new ResourceNotFoundException("provided user not found"));
-        if(!Role.OWNER.equals(userExists.getUserRole())){
-            throw new IllegalArgumentException("Provide user is not owner, please update user role");
+        if (request.getCity() != null) {
+            existingVenue.setCity(request.getCity());
         }
-        VenueMapper.updateVenue(venue,updateRequest,userExists);
-        return VenueMapper.buildVenueResponse(venueRepository.save(venue));
+        if (request.getAddress() != null) {
+            existingVenue.setAddress(request.getAddress());
+        }
+        if (request.getMobileNumber() != null) {
+            existingVenue.setMobileNumber(request.getMobileNumber());
+        }
+        if (request.getType() != null) {
+            existingVenue.setType(request.getType());
+        }
+
+        Venue updatedVenue = venueRepository.save(existingVenue);
+        return Mapper.buildVenueResponse(updatedVenue);
     }
 
     @Override
-    public void deleteVenue(Long venueId) {
-        Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
-        venueRepository.delete(venue);
+    @Transactional
+    public Boolean deleteVenue(Long venueId) {
+        if (venueRepository.existsById(venueId)) {
+            venueRepository.deleteById(venueId);
+            return true;
+        }
+        return false;
     }
-
 }

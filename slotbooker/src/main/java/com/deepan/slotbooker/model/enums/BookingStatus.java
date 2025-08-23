@@ -1,7 +1,5 @@
 package com.deepan.slotbooker.model.enums;
 
 public enum BookingStatus {
-    BOOKED,
-    CANCELLED,
-    RESERVED
+    RESERVED, CONFIRMED, CANCELLED, PENDING
 }

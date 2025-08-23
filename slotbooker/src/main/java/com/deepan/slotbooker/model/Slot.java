@@ -2,16 +2,17 @@ package com.deepan.slotbooker.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Represents a bookable time slot for a facility.
+ */
 @Entity
 @Table (name = "slots")
 @Data
@@ -22,25 +23,27 @@ public class Slot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long slotId;
+    private Long id;
+
+    @Column(nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(nullable = false)
+    private LocalDateTime endTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facility_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Facility facility;
 
-    private LocalDateTime startTime;
-
-    private LocalDateTime endTime;
-
+    @Column(nullable = false)
     private Boolean isBooked;
 
-    private LocalDate date;
-
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdTime;
 
     @UpdateTimestamp
+    @Column(nullable = false)
     private LocalDateTime updatedTime;
-
 }
