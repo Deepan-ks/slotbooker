@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="1756023002374-1" author="Deepan">
+        <createTable tableName="bookings">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_bookings"/>
+            </column>
+            <column name="slot_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="player_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="booking_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1756023002374-2" author="Deepan">
+        <createTable tableName="facilities">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_facilities"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="venue_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sport_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_per_hour" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1756023002374-3" author="Deepan">
+        <createTable tableName="slots">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_slots"/>
+            </column>
+            <column name="start_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="facility_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_booked" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1756023002374-4" author="Deepan">
+        <createTable tableName="sports">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sports"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1756023002374-5" author="Deepan">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birth_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mobile_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1756023002374-6" author="Deepan">
+        <createTable tableName="venues">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_venues"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mobile_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="owner_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1756023002374-7" author="Deepan">
+        <addUniqueConstraint columnNames="name" constraintName="uc_sports_name" tableName="sports"/>
+    </changeSet>
+    <changeSet id="1756023002374-8" author="Deepan">
+        <addUniqueConstraint columnNames="email" constraintName="uc_users_email" tableName="users"/>
+    </changeSet>
+    <changeSet id="1756023002374-9" author="Deepan">
+        <addUniqueConstraint columnNames="mobile_number" constraintName="uc_users_mobilenumber" tableName="users"/>
+    </changeSet>
+    <changeSet id="1756023002374-10" author="Deepan">
+        <addUniqueConstraint columnNames="mobile_number" constraintName="uc_venues_mobilenumber" tableName="venues"/>
+    </changeSet>
+    <changeSet id="1756023002374-11" author="Deepan">
+        <addForeignKeyConstraint baseColumnNames="player_id" baseTableName="bookings"
+                                 constraintName="FK_BOOKINGS_ON_PLAYER" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1756023002374-12" author="Deepan">
+        <addForeignKeyConstraint baseColumnNames="slot_id" baseTableName="bookings" constraintName="FK_BOOKINGS_ON_SLOT"
+                                 referencedColumnNames="id" referencedTableName="slots"/>
+    </changeSet>
+    <changeSet id="1756023002374-13" author="Deepan">
+        <addForeignKeyConstraint baseColumnNames="sport_id" baseTableName="facilities"
+                                 constraintName="FK_FACILITIES_ON_SPORT" referencedColumnNames="id"
+                                 referencedTableName="sports"/>
+    </changeSet>
+    <changeSet id="1756023002374-14" author="Deepan">
+        <addForeignKeyConstraint baseColumnNames="venue_id" baseTableName="facilities"
+                                 constraintName="FK_FACILITIES_ON_VENUE" referencedColumnNames="id"
+                                 referencedTableName="venues"/>
+    </changeSet>
+    <changeSet id="1756023002374-15" author="Deepan">
+        <addForeignKeyConstraint baseColumnNames="facility_id" baseTableName="slots"
+                                 constraintName="FK_SLOTS_ON_FACILITY" referencedColumnNames="id"
+                                 referencedTableName="facilities"/>
+    </changeSet>
+    <changeSet id="1756023002374-16" author="Deepan">
+        <addForeignKeyConstraint baseColumnNames="owner_id" baseTableName="venues" constraintName="FK_VENUES_ON_OWNER"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+
+    <include file="db/changelog/v1.0.0/db-v1.0.0-inserting-data.sql" relativeToChangelogFile="false"/>
+
+</databaseChangeLog>
