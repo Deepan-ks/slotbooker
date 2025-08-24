@@ -85,6 +85,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingResponse getBookingById(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
@@ -92,6 +93,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public List<BookingResponse> getBookingsForPlayer(Long playerId) {
         User player = userRepository.findById(playerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Player not found"));

@@ -14,7 +14,6 @@ import com.deepan.slotbooker.repository.VenueRepository;
 import com.deepan.slotbooker.service.FacilityService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,6 +46,7 @@ public class FacilityServiceImpl implements FacilityService {
     }
 
     @Override
+    @Transactional
     public List<FacilityResponse> getFacilitiesByVenue(Long venueId) {
         Venue venue = venueRepository.findById(venueId)
                 .orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
@@ -59,8 +59,6 @@ public class FacilityServiceImpl implements FacilityService {
     public FacilityResponse updateFacility(Long facilityId, FacilityUpdateRequest request) {
         Facility existingFacility = facilityRepository.findById(facilityId)
                 .orElseThrow(() -> new ResourceNotFoundException("Facility not found"));
-        Sport existingSport = sportRepository.findById(request.getSportId())
-                .orElseThrow(() -> new ResourceNotFoundException("Sport not found"));
 
         if (request.getName() != null) {
             existingFacility.setName(request.getName());
@@ -69,6 +67,8 @@ public class FacilityServiceImpl implements FacilityService {
             existingFacility.setPricePerHour(request.getPricePerHour());
         }
         if(request.getSportId() != null){
+            Sport existingSport = sportRepository.findById(request.getSportId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Sport not found"));
             existingFacility.setSport(existingSport);
         }
 

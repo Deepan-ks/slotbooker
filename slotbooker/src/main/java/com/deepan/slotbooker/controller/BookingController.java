@@ -50,11 +50,11 @@ public class BookingController {
      * @param bookingId The ID of the booking to cancel.
      * @return A ResponseEntity with HTTP status 200 (OK) on success, or 404 (Not Found) or 400 (Bad Request).
      */
-    @PutMapping("/{bookingId}/cancel")
+    @DeleteMapping("/{bookingId}/cancel")
     public ResponseEntity<Void> cancelBooking(@PathVariable Long bookingId) {
         try {
             Boolean isCancelled = bookingService.cancelBooking(bookingId);
-            if (isCancelled) {
+            if (Boolean.TRUE.equals(isCancelled)) {
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.badRequest().build();
