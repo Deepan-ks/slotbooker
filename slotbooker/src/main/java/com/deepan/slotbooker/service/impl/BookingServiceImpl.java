@@ -1,88 +1,117 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.booking.BookingCreateRequest;
-import com.deepan.slotbooker.dto.booking.BookingResponse;
+import com.deepan.slotbooker.dto.bookingDTO.BookingCreateRequest;
+import com.deepan.slotbooker.dto.bookingDTO.BookingResponse;
+import com.deepan.slotbooker.dto.bookingDTO.BookingUpdateRequest;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
-import com.deepan.slotbooker.mapper.BookingMapper;
+import com.deepan.slotbooker.mapper.Mapper;
 import com.deepan.slotbooker.model.Booking;
-import com.deepan.slotbooker.model.BookingStatus;
 import com.deepan.slotbooker.model.Slot;
 import com.deepan.slotbooker.model.User;
+import com.deepan.slotbooker.model.enums.BookingStatus;
+import com.deepan.slotbooker.model.enums.Roles;
 import com.deepan.slotbooker.repository.BookingRepository;
 import com.deepan.slotbooker.repository.SlotRepository;
 import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.service.BookingService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
-    private SlotRepository slotRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final SlotRepository slotRepository;
+    private final UserRepository userRepository;
 
 
     @Override
     @Transactional
-    public BookingResponse bookSlot(BookingCreateRequest request) {
+    public BookingResponse bookSlot(Long playerId, BookingCreateRequest request) {
         Slot slot = slotRepository.findById(request.getSlotId())
                 .orElseThrow(() -> new ResourceNotFoundException("Slot not found"));
+        User player = userRepository.findById(playerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found"));
 
+        // Business logic: check if the slot is already booked
         if (Boolean.TRUE.equals(slot.getIsBooked())) {
-            throw new IllegalStateException("Slot already booked");
+            throw new IllegalStateException("Slot is already booked.");
         }
 
-        User user = userRepository.findById(request.getPlayerId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        // Business logic: only players can book slots
+        if (!Roles.PLAYER.equals(player.getRole())) {
+            throw new IllegalArgumentException("Only players can book slots.");
+        }
 
-        Booking booking = BookingMapper.createBookingEntity(request, slot, user);
+        Booking booking = Booking.builder()
+                .slot(slot)
+                .player(player)
+                .bookingTime(LocalDateTime.now())
+                .status(BookingStatus.CONFIRMED)
+                .build();
 
-        slot.setIsBooked(true); // Update slot status
+        slot.setIsBooked(true);
         slotRepository.save(slot);
         Booking savedBooking = bookingRepository.save(booking);
 
-        return BookingMapper.buildBookingResponse(savedBooking);
-    }
-
-    @Override
-    public List<BookingResponse> getBookingsForPlayerId(Long playerId) {
-        User player = userRepository.findById(playerId).orElseThrow(() -> new ResourceNotFoundException("Player not found"));
-        List<Booking> bookings = bookingRepository.findByPlayer(player);
-        return bookings.stream().map(BookingMapper::buildBookingResponse).toList();
-    }
-
-    @Override
-    public BookingResponse getBookingById(Long id) {
-        Booking booking = bookingRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Booking not found"));
-        return BookingMapper.buildBookingResponse(booking);
+        return Mapper.buildBookingResponse(savedBooking);
     }
 
     @Override
     @Transactional
-    public Boolean deleteBookingForId(Long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+    public Boolean cancelBooking(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        if ("CANCELLED".equalsIgnoreCase(booking.getStatus().name())) {
-            return Boolean.FALSE;
+        // Business logic: don't allow cancelling already cancelled bookings
+        if (BookingStatus.CANCELLED.equals(booking.getStatus())) {
+            return false;
         }
 
         booking.setStatus(BookingStatus.CANCELLED);
-        Slot slot = booking.getSlot();
-        slot.setIsBooked(false);
-
-        slotRepository.save(slot);
         bookingRepository.save(booking);
 
-        return Boolean.TRUE;
+        // Also free up the booked slot
+        Slot slot = booking.getSlot();
+        slot.setIsBooked(false);
+        slotRepository.save(slot);
+
+        return true;
     }
 
+    @Override
+    @Transactional
+    public BookingResponse getBookingById(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+        return Mapper.buildBookingResponse(booking);
+    }
+
+    @Override
+    @Transactional
+    public List<BookingResponse> getBookingsForPlayer(Long playerId) {
+        User player = userRepository.findById(playerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Player not found"));
+        List<Booking> bookings = bookingRepository.findByPlayer(player);
+        return Mapper.buildBookingResponseList(bookings);
+    }
+
+    @Override
+    @Transactional
+    public BookingResponse updateBooking(Long bookingId, BookingUpdateRequest request) {
+        Booking existingBooking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        if (request.getStatus() != null) {
+            existingBooking.setStatus(request.getStatus());
+        }
+
+        Booking updatedBooking = bookingRepository.save(existingBooking);
+        return Mapper.buildBookingResponse(updatedBooking);
+    }
 }
