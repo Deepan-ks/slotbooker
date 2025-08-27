@@ -36,7 +36,7 @@ public class SlotController {
     public ResponseEntity<SlotResponse> createSlot(@PathVariable Long facilityId, @Valid @RequestBody SlotCreateRequest request) {
         try {
             SlotResponse response = slotService.createSlot(facilityId, request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {

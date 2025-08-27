@@ -35,7 +35,7 @@ public class VenueController {
     public ResponseEntity<VenueResponse> createVenue(@PathVariable Long ownerId, @Valid @RequestBody VenueCreateRequest request) {
         try {
             VenueResponse response = venueService.createVenue(request, ownerId);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

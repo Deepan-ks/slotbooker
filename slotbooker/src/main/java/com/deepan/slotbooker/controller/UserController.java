@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserCreateRequest request) {
         try {
             UserResponse response = userService.registerUser(request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

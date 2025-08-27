@@ -36,7 +36,7 @@ public class BookingController {
     public ResponseEntity<BookingResponse> bookSlot(@PathVariable Long playerId, @Valid @RequestBody BookingCreateRequest request) {
         try {
             BookingResponse response = bookingService.bookSlot(playerId, request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException | IllegalStateException e) {

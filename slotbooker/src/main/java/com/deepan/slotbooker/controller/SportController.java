@@ -34,7 +34,7 @@ public class SportController {
     public ResponseEntity<SportResponse> addSport(@Valid @RequestBody SportCreateRequest request) {
         try {
             SportResponse response = sportService.addSport(request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

@@ -5,7 +5,6 @@ import com.deepan.slotbooker.dto.facilityDTO.FacilityResponse;
 import com.deepan.slotbooker.dto.facilityDTO.FacilityUpdateRequest;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.service.FacilityService;
-import com.deepan.slotbooker.service.impl.FacilityServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,7 +35,7 @@ public class FacilityController {
     public ResponseEntity<FacilityResponse> addFacility(@PathVariable Long venueId, @Valid @RequestBody FacilityCreateRequest request) {
         try {
             FacilityResponse response = facilityService.addFacility(venueId, request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
