@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class FacilityController {
      * @return A ResponseEntity with the created facility and HTTP status 201 (Created).
      */
     @PostMapping("/{venueId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<FacilityResponse> addFacility(@PathVariable Long venueId, @Valid @RequestBody FacilityCreateRequest request) {
         try {
             FacilityResponse response = facilityService.addFacility(venueId, request);
@@ -50,6 +52,7 @@ public class FacilityController {
      * @return A ResponseEntity with a list of facilities and HTTP status 200 (OK).
      */
     @GetMapping("/venue/{venueId}")
+    @PreAuthorize("hasAnyRole('OWNER','PLAYER')")
     public ResponseEntity<List<FacilityResponse>> getFacilitiesByVenue(@PathVariable Long venueId) {
         try {
             List<FacilityResponse> facilities = facilityService.getFacilitiesByVenue(venueId);
@@ -67,6 +70,7 @@ public class FacilityController {
      * @return A ResponseEntity with the updated facility and HTTP status 200 (OK), or 404 (Not Found).
      */
     @PutMapping("/{facilityId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<FacilityResponse> updateFacility(@PathVariable Long facilityId, @Valid @RequestBody FacilityUpdateRequest request) {
         try {
             FacilityResponse response = facilityService.updateFacility(facilityId, request);
@@ -83,6 +87,7 @@ public class FacilityController {
      * @return A ResponseEntity with HTTP status 204 (No Content) on success, or 404 (Not Found).
      */
     @DeleteMapping("/{facilityId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> deleteFacility(@PathVariable Long facilityId) {
         Boolean isDeleted = facilityService.deleteFacility(facilityId);
         if (Boolean.TRUE.equals(isDeleted)) {

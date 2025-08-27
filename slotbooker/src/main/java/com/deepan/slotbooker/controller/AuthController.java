@@ -1,10 +1,14 @@
 package com.deepan.slotbooker.controller;
 
 import com.deepan.slotbooker.dto.authDTO.LoginCreateRequest;
+import com.deepan.slotbooker.dto.userDTO.UserCreateRequest;
+import com.deepan.slotbooker.dto.userDTO.UserResponse;
 import com.deepan.slotbooker.security.CustomUserDetailsService;
 import com.deepan.slotbooker.security.JwtUtil;
+import com.deepan.slotbooker.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,6 +30,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil  jwtUtil;
+    private final UserService userService;
 
     /**
      * Handles user login and generates a JWT.
@@ -57,5 +62,21 @@ public class AuthController {
         response.put("token", jwt);
 
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Registers a new user.
+     *
+     * @param request The DTO containing user creation details.
+     * @return A ResponseEntity with the newly created user and HTTP status 201 (Created).
+     */
+    @PostMapping("/register")
+    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserCreateRequest request) {
+        try {
+            UserResponse response = userService.registerUser(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

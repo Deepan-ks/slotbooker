@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class SportController {
      * @return A ResponseEntity with the newly created sport and HTTP status 201 (Created).
      */
     @PostMapping
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<SportResponse> addSport(@Valid @RequestBody SportCreateRequest request) {
         try {
             SportResponse response = sportService.addSport(request);
@@ -46,6 +48,7 @@ public class SportController {
      * @return A ResponseEntity with a list of all sports and HTTP status 200 (OK).
      */
     @GetMapping
+    @PreAuthorize("hasAnyRole('OWNER','PLAYER')")
     public ResponseEntity<List<SportResponse>> getAllSports() {
         List<SportResponse> sports = sportService.fetchAllSports();
         return new ResponseEntity<>(sports, HttpStatus.OK);
@@ -59,6 +62,7 @@ public class SportController {
      * @return A ResponseEntity with the updated sport and HTTP status 200 (OK), or 404 (Not Found).
      */
     @PutMapping("/{sportId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<SportResponse> updateSport(@PathVariable Long sportId, @Valid @RequestBody SportUpdateRequest request) {
         try {
             SportResponse response = sportService.updateSport(sportId, request);
@@ -75,6 +79,7 @@ public class SportController {
      * @return A ResponseEntity with HTTP status 204 (No Content) on success, or 404 (Not Found).
      */
     @DeleteMapping("/{sportId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> deleteSport(@PathVariable Long sportId) {
         Boolean isDeleted = sportService.deleteSport(sportId);
         if (Boolean.TRUE.equals(isDeleted)) {

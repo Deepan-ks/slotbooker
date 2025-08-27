@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class BookingController {
      * @return A ResponseEntity with the created booking and HTTP status 201 (Created).
      */
     @PostMapping("/{playerId}")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<BookingResponse> bookSlot(@PathVariable Long playerId, @Valid @RequestBody BookingCreateRequest request) {
         try {
             BookingResponse response = bookingService.bookSlot(playerId, request);
@@ -51,6 +53,7 @@ public class BookingController {
      * @return A ResponseEntity with HTTP status 200 (OK) on success, or 404 (Not Found) or 400 (Bad Request).
      */
     @DeleteMapping("/{bookingId}/cancel")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<Void> cancelBooking(@PathVariable Long bookingId) {
         try {
             Boolean isCancelled = bookingService.cancelBooking(bookingId);
@@ -71,6 +74,7 @@ public class BookingController {
      * @return A ResponseEntity with the booking details and HTTP status 200 (OK), or 404 (Not Found).
      */
     @GetMapping("/{bookingId}")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable Long bookingId) {
         try {
             BookingResponse response = bookingService.getBookingById(bookingId);
@@ -87,6 +91,7 @@ public class BookingController {
      * @return A ResponseEntity with a list of bookings and HTTP status 200 (OK).
      */
     @GetMapping("/player/{playerId}")
+    @PreAuthorize("hasRole('PLAYER')")
     public ResponseEntity<List<BookingResponse>> getBookingsForPlayer(@PathVariable Long playerId) {
         try {
             List<BookingResponse> bookings = bookingService.getBookingsForPlayer(playerId);
@@ -104,6 +109,7 @@ public class BookingController {
      * @return A ResponseEntity with the updated booking and HTTP status 200 (OK), or 404 (Not Found).
      */
     @PutMapping("/{bookingId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<BookingResponse> updateBooking(@PathVariable Long bookingId, @Valid @RequestBody BookingUpdateRequest request) {
         try {
             BookingResponse response = bookingService.updateBooking(bookingId, request);
