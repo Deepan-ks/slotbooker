@@ -1,6 +1,5 @@
 package com.deepan.slotbooker.controller;
 
-import com.deepan.slotbooker.dto.userDTO.UserCreateRequest;
 import com.deepan.slotbooker.dto.userDTO.UserResponse;
 import com.deepan.slotbooker.dto.userDTO.UserUpdateRequest;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
@@ -9,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,21 +24,6 @@ public class UserController {
 
     private final UserService userService;
 
-    /**
-     * Registers a new user.
-     *
-     * @param request The DTO containing user creation details.
-     * @return A ResponseEntity with the newly created user and HTTP status 201 (Created).
-     */
-    @PostMapping
-    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserCreateRequest request) {
-        try {
-            UserResponse response = userService.registerUser(request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
 
     /**
      * Retrieves a user by their ID.
@@ -47,6 +32,7 @@ public class UserController {
      * @return A ResponseEntity with the user's details and HTTP status 200 (OK), or 404 (Not Found).
      */
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long userId) {
         try {
             UserResponse response = userService.findUserById(userId);
@@ -62,6 +48,7 @@ public class UserController {
      * @return A ResponseEntity with a list of all users and HTTP status 200 (OK).
      */
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserResponse> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -75,6 +62,7 @@ public class UserController {
      * @return A ResponseEntity with the updated user and HTTP status 200 (OK), or 404 (Not Found).
      */
     @PutMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long userId, @Valid @RequestBody UserUpdateRequest request) {
         try {
             UserResponse response = userService.updateUser(userId, request);
@@ -91,6 +79,7 @@ public class UserController {
      * @return A ResponseEntity with HTTP status 204 (No Content) on success, or 404 (Not Found).
      */
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
         Boolean isDeleted = userService.deleteUser(userId);
         if (Boolean.TRUE.equals(isDeleted)) {

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -33,10 +34,11 @@ public class SlotController {
      * @return A ResponseEntity with the created slot and HTTP status 201 (Created).
      */
     @PostMapping("/{facilityId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<SlotResponse> createSlot(@PathVariable Long facilityId, @Valid @RequestBody SlotCreateRequest request) {
         try {
             SlotResponse response = slotService.createSlot(facilityId, request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
@@ -53,6 +55,7 @@ public class SlotController {
      * @return A ResponseEntity with a list of slots and HTTP status 200 (OK).
      */
     @GetMapping("/facility/{facilityId}")
+    @PreAuthorize("hasAnyRole('OWNER', 'PLAYER')")
     public ResponseEntity<List<SlotResponse>> getSlotsByFacility(
             @PathVariable Long facilityId,
             @RequestParam(required = false) LocalDateTime startTime,
@@ -73,6 +76,7 @@ public class SlotController {
      * @return A ResponseEntity with the updated slot and HTTP status 200 (OK), or 404 (Not Found).
      */
     @PutMapping("/{slotId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<SlotResponse> updateSlot(@PathVariable Long slotId, @Valid @RequestBody SlotUpdateRequest request) {
         try {
             SlotResponse response = slotService.updateSlot(slotId, request);
@@ -89,6 +93,7 @@ public class SlotController {
      * @return A ResponseEntity with HTTP status 204 (No Content) on success, or 404 (Not Found).
      */
     @DeleteMapping("/{slotId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> deleteSlot(@PathVariable Long slotId) {
         Boolean isDeleted = slotService.deleteSlot(slotId);
         if (Boolean.TRUE.equals(isDeleted)) {

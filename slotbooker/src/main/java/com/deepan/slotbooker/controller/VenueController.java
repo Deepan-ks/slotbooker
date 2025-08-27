@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,10 +33,11 @@ public class VenueController {
      * @return A ResponseEntity with the created venue and HTTP status 201 (Created).
      */
     @PostMapping("/{ownerId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<VenueResponse> createVenue(@PathVariable Long ownerId, @Valid @RequestBody VenueCreateRequest request) {
         try {
             VenueResponse response = venueService.createVenue(request, ownerId);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -47,6 +49,7 @@ public class VenueController {
      * @return A ResponseEntity with a list of all venues and HTTP status 200 (OK).
      */
     @GetMapping
+    @PreAuthorize("hasAnyRole('OWNER', 'PLAYER')")
     public ResponseEntity<List<VenueResponse>> getAllVenues() {
         List<VenueResponse> venues = venueService.fetchAllVenues();
         return new ResponseEntity<>(venues, HttpStatus.OK);
@@ -59,6 +62,7 @@ public class VenueController {
      * @return A ResponseEntity with a list of venues and HTTP status 200 (OK).
      */
     @GetMapping("/owner/{ownerId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<VenueResponse>> getVenuesByOwner(@PathVariable Long ownerId) {
         List<VenueResponse> venues = venueService.fetchVenuesByOwner(ownerId);
         return new ResponseEntity<>(venues, HttpStatus.OK);
@@ -71,6 +75,7 @@ public class VenueController {
      * @return A ResponseEntity with a list of venues and HTTP status 200 (OK).
      */
     @GetMapping("/city/{city}")
+    @PreAuthorize("hasAnyRole('OWNER', 'PLAYER')")
     public ResponseEntity<List<VenueResponse>> getVenuesByCity(@PathVariable String city) {
         List<VenueResponse> venues = venueService.fetchVenuesByCity(city);
         return new ResponseEntity<>(venues, HttpStatus.OK);
@@ -84,6 +89,7 @@ public class VenueController {
      * @return A ResponseEntity with the updated venue and HTTP status 200 (OK), or 404 (Not Found).
      */
     @PutMapping("/{venueId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<VenueResponse> updateVenue(@PathVariable Long venueId, @Valid @RequestBody VenueUpdateRequest request) {
         try {
             VenueResponse response = venueService.updateVenue(venueId, request);
@@ -100,6 +106,7 @@ public class VenueController {
      * @return A ResponseEntity with HTTP status 204 (No Content) on success, or 404 (Not Found).
      */
     @DeleteMapping("/{venueId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> deleteVenue(@PathVariable Long venueId) {
         Boolean isDeleted = venueService.deleteVenue(venueId);
         if (Boolean.TRUE.equals(isDeleted)) {
