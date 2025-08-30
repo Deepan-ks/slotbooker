@@ -1,6 +1,5 @@
 package com.deepan.slotbooker.service;
 
-import com.deepan.slotbooker.dto.userDTO.UserCreateRequest;
 import com.deepan.slotbooker.dto.userDTO.UserResponse;
 import com.deepan.slotbooker.dto.userDTO.UserUpdateRequest;
 import jakarta.transaction.Transactional;
@@ -11,15 +10,6 @@ import java.util.List;
  * Service interface for User-related business logic.
  */
 public interface UserService {
-
-    /**
-     * Registers a new user with the application.
-     *
-     * @param userCreateRequest DTO containing user registration details.
-     * @return UserResponse DTO of the newly registered user.
-     */
-    @Transactional
-    UserResponse registerUser(UserCreateRequest userCreateRequest);
 
     /**
      * Retrieves a user by their ID.

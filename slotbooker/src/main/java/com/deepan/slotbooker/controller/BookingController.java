@@ -8,7 +8,6 @@ import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,7 @@ public class BookingController {
     public ResponseEntity<BookingResponse> bookSlot(@PathVariable Long playerId, @Valid @RequestBody BookingCreateRequest request) {
         try {
             BookingResponse response = bookingService.bookSlot(playerId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException | IllegalStateException e) {
@@ -78,7 +77,7 @@ public class BookingController {
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable Long bookingId) {
         try {
             BookingResponse response = bookingService.getBookingById(bookingId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -95,7 +94,7 @@ public class BookingController {
     public ResponseEntity<List<BookingResponse>> getBookingsForPlayer(@PathVariable Long playerId) {
         try {
             List<BookingResponse> bookings = bookingService.getBookingsForPlayer(playerId);
-            return new ResponseEntity<>(bookings, HttpStatus.OK);
+            return ResponseEntity.ok(bookings);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -113,7 +112,7 @@ public class BookingController {
     public ResponseEntity<BookingResponse> updateBooking(@PathVariable Long bookingId, @Valid @RequestBody BookingUpdateRequest request) {
         try {
             BookingResponse response = bookingService.updateBooking(bookingId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

@@ -66,7 +66,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updateUser(@PathVariable Long userId, @Valid @RequestBody UserUpdateRequest request) {
         try {
             UserResponse response = userService.updateUser(userId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

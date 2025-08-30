@@ -7,7 +7,6 @@ import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.service.SlotService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,7 @@ public class SlotController {
     public ResponseEntity<SlotResponse> createSlot(@PathVariable Long facilityId, @Valid @RequestBody SlotCreateRequest request) {
         try {
             SlotResponse response = slotService.createSlot(facilityId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
@@ -62,7 +61,7 @@ public class SlotController {
             @RequestParam(required = false) LocalDateTime endTime) {
         try {
             List<SlotResponse> slots = slotService.getSlotsByFacility(facilityId, startTime, endTime);
-            return new ResponseEntity<>(slots, HttpStatus.OK);
+            return ResponseEntity.ok(slots);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -80,7 +79,7 @@ public class SlotController {
     public ResponseEntity<SlotResponse> updateSlot(@PathVariable Long slotId, @Valid @RequestBody SlotUpdateRequest request) {
         try {
             SlotResponse response = slotService.updateSlot(slotId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

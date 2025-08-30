@@ -36,7 +36,7 @@ public class SportController {
     public ResponseEntity<SportResponse> addSport(@Valid @RequestBody SportCreateRequest request) {
         try {
             SportResponse response = sportService.addSport(request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -66,7 +66,7 @@ public class SportController {
     public ResponseEntity<SportResponse> updateSport(@PathVariable Long sportId, @Valid @RequestBody SportUpdateRequest request) {
         try {
             SportResponse response = sportService.updateSport(sportId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

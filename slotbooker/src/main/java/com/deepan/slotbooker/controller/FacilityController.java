@@ -7,7 +7,6 @@ import com.deepan.slotbooker.exception.ResourceNotFoundException;
 import com.deepan.slotbooker.service.FacilityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +36,7 @@ public class FacilityController {
     public ResponseEntity<FacilityResponse> addFacility(@PathVariable Long venueId, @Valid @RequestBody FacilityCreateRequest request) {
         try {
             FacilityResponse response = facilityService.addFacility(venueId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
@@ -56,7 +55,7 @@ public class FacilityController {
     public ResponseEntity<List<FacilityResponse>> getFacilitiesByVenue(@PathVariable Long venueId) {
         try {
             List<FacilityResponse> facilities = facilityService.getFacilitiesByVenue(venueId);
-            return new ResponseEntity<>(facilities, HttpStatus.OK);
+            return ResponseEntity.ok(facilities);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -74,7 +73,7 @@ public class FacilityController {
     public ResponseEntity<FacilityResponse> updateFacility(@PathVariable Long facilityId, @Valid @RequestBody FacilityUpdateRequest request) {
         try {
             FacilityResponse response = facilityService.updateFacility(facilityId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

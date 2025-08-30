@@ -37,7 +37,7 @@ public class VenueController {
     public ResponseEntity<VenueResponse> createVenue(@PathVariable Long ownerId, @Valid @RequestBody VenueCreateRequest request) {
         try {
             VenueResponse response = venueService.createVenue(request, ownerId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -65,7 +65,7 @@ public class VenueController {
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<List<VenueResponse>> getVenuesByOwner(@PathVariable Long ownerId) {
         List<VenueResponse> venues = venueService.fetchVenuesByOwner(ownerId);
-        return new ResponseEntity<>(venues, HttpStatus.OK);
+        return ResponseEntity.ok(venues);
     }
 
     /**
@@ -78,7 +78,7 @@ public class VenueController {
     @PreAuthorize("hasAnyRole('OWNER', 'PLAYER')")
     public ResponseEntity<List<VenueResponse>> getVenuesByCity(@PathVariable String city) {
         List<VenueResponse> venues = venueService.fetchVenuesByCity(city);
-        return new ResponseEntity<>(venues, HttpStatus.OK);
+        return ResponseEntity.ok(venues);
     }
 
     /**
@@ -93,7 +93,7 @@ public class VenueController {
     public ResponseEntity<VenueResponse> updateVenue(@PathVariable Long venueId, @Valid @RequestBody VenueUpdateRequest request) {
         try {
             VenueResponse response = venueService.updateVenue(venueId, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.ok(response);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

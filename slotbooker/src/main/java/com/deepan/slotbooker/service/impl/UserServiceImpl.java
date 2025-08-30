@@ -1,6 +1,5 @@
 package com.deepan.slotbooker.service.impl;
 
-import com.deepan.slotbooker.dto.userDTO.UserCreateRequest;
 import com.deepan.slotbooker.dto.userDTO.UserResponse;
 import com.deepan.slotbooker.dto.userDTO.UserUpdateRequest;
 import com.deepan.slotbooker.exception.ResourceNotFoundException;
@@ -10,7 +9,6 @@ import com.deepan.slotbooker.repository.UserRepository;
 import com.deepan.slotbooker.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,27 +28,6 @@ public class UserServiceImpl implements UserService {
      */
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Override
-    public UserResponse registerUser(UserCreateRequest request) {
-        // Business logic: check for existing user before saving
-        if (userRepository.findByMobileNumber(request.getMobileNumber()).isPresent()) {
-            throw new IllegalArgumentException("Mobile number already registered");
-        }
-
-        User user = User.builder()
-                .name(request.getName())
-                .birthDate(request.getBirthDate())
-                .email(request.getEmail())
-                .mobileNumber(request.getMobileNumber())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .userStatus(request.getUserStatus())
-                .build();
-
-        User savedUser = userRepository.save(user);
-        return Mapper.buildUserResponse(savedUser);
-    }
 
     @Override
     public UserResponse findUserById(Long userId) {
